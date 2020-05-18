@@ -1,7 +1,7 @@
 <!-- 题库创建 -->
 <template>
     <div class="QBcreate">
-        create QB
+        
     </div>
 </template>
 
