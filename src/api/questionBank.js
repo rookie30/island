@@ -1,14 +1,14 @@
 import request from "@/utils/request";
 
 /**
- * 初始化题库
+ * 获取题库信息
  * @param {*} data 
  */
 export function getList(data) {
     return request({
-        'url': '/v1/library',
-        'method': 'get',
-        data
+        'url': '/v1/library?currentPage=' + data.currentPage + 
+        '&tag_id=' + data.tag_id + '&name=' + data.name,
+        'method': 'get'
     })
 }
 
@@ -33,5 +33,13 @@ export function getTagInfo(token) {
         url: '/v1/tag/',
         method: 'get',
         params: { token }
+    })
+}
+
+export function editQuestionBank(data) {
+    return request({
+        url: '/v1/library/modify',
+        method: 'post',
+        data
     })
 }

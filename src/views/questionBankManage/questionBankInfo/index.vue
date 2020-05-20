@@ -2,12 +2,25 @@
 <template>
   <div class="questionBankInfo">
     <div style="margin: 25px 0;">
-      <el-input placeholder="请输入搜索内容" v-model="searchCont.input" suffix-icon="el-icon-search" class="searchInput"></el-input>
-      <el-select v-model="searchCont.status" class="questionBankTypeChoose">
-        <el-option label="启用" value="1"></el-option>
-        <el-option label="禁用" value="0"></el-option>
+      <el-input placeholder="请输入查找的题库名称" v-model="listQuery.name" suffix-icon="el-icon-search" class="searchInput"></el-input>
+      <el-select
+        v-model="listQuery.tag_id"
+        class="questionBankTypeChoose"
+        placeholder="请选择题库类别">
+        <el-option
+          v-for="tagItem in tagList"
+          :key="tagItem.id"
+          :value="tagItem.id"
+          :label="tagItem.name">
+        </el-option>
       </el-select>
-      <el-button type="primary" class="searchBtn" icon="el-icon-search">搜索</el-button>
+      <el-button 
+        type="primary" 
+        class="searchBtn" 
+        icon="el-icon-search"
+        @click="getList">
+        搜索
+      </el-button>
       <el-button 
         class="addBtn"
         icon="el-icon-plus"
@@ -81,7 +94,9 @@
         ref="CreateQuestionBankForm"
         @isSuccess="getCreateInfo($event)">
     </CreateQuestionBankForm>
-    <EditQuestionBankForm ref="EditQuestionBankForm"></EditQuestionBankForm>
+    <EditQuestionBankForm 
+      ref="EditQuestionBankForm"
+      @isSuccessEdit="getEditInfo($event)"></EditQuestionBankForm>
   </div>
 </template>
 
@@ -116,17 +131,16 @@ export default {
     return {
       list: null,
       listLoading: false,
-      searchCont: {
-        input: "",
-        status: "1"
-      },
       total: 100,
       listQuery: {
-        currectPage: 1,
+        currentPage: 1,
         limit: 20,
+        tag_id: "",
+        name: ""
       },
       isCreate: false,
       editRow: null,
+      tagList: {},
     }
   },
   methods: {
@@ -144,7 +158,7 @@ export default {
     },
     getList() {
       this.isLoading = true;
-      api.getList(this.listQuery.page).then(res => {
+      api.getList(this.listQuery).then(res => {
         // console.log(res);
         this.list = res.data.rows;
         let questionInfo = res.data.rows;
@@ -168,6 +182,11 @@ export default {
         this.reloadPage();
       }
     },
+    getEditInfo(editSituation) {
+      if(editSituation == "success") {
+        this.reloadPage();
+      }
+    },
     reloadPage() {
       this.listLoading = true;
       setTimeout(() => {
@@ -175,9 +194,22 @@ export default {
         this.reload();
       }, 100);
     },
+    /**
+     * 获取题库标签
+     */
+    getTagInfomation() {
+      api.getTagInfo().then(res => {
+        console.log(res);
+        this.tagList = res.data;
+      }).catch(error => {
+        this.$message.error("获取题库标签失败");
+        console.log(error);
+      });
+    }
   },
   mounted() {
     this.getList();
+    this.getTagInfomation();
   }
 }
 </script>
@@ -194,7 +226,7 @@ export default {
   width: 280px;
 }
 .questionBankInfo .questionBankTypeChoose {
-  width: 80px;
+  width: 150px;
   margin: 0 10px;
 }
 .questionBankInfo .questionBankTable {

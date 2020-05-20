@@ -3,7 +3,8 @@
     <div class="editQB">
         <el-dialog
             title="题库编辑"
-            :visible.sync="isEdit">
+            :visible.sync="isEdit"
+            @closed="resetForm">
             <el-form
                 :model="questionBankForm"
                 label-width="80px"
@@ -23,7 +24,6 @@
                     <el-select 
                         v-model="questionBankForm.tag_id"
                         :loading="tagChooseLoading"
-                        @focus="getTagInformation"
                         class="tagChoose choosePart">
                         <el-option 
                             v-for="item in tagList"
@@ -92,7 +92,7 @@
                     <el-button
                         type="primary"
                         style="float:right;margin-right:20px;"
-                        @click="submitForm">
+                        @click="submitForm('questionBankForm')">
                         保存
                     </el-button>
                 </el-form-item>
@@ -103,7 +103,7 @@
 
 <script>
 import {getFreeAdmin} from '@/api/adminManage';
-import {getTagInfo} from '@/api/questionBank';
+import {getTagInfo, editQuestionBank} from '@/api/questionBank';
 
 export default {
     name: 'editQuestionBank',
@@ -112,7 +112,7 @@ export default {
             if(!name) {
                 callback(new Error("题库名称不能为空"));
             }
-            else if(!(/^[0-9a-zA-Z\u4e00-\u9fa5#]{1,20}$/).test(name)) {
+            else if(!(/^[0-9a-zA-Z\u4e00-\u9fa5#+]{1,20}$/).test(name)) {
                 callback(new Error("题库名称不合法"));
             }
             else {
@@ -120,7 +120,7 @@ export default {
             }
         };
         return {
-            questionBankForm: {admin_id: 3},
+            questionBankForm: {},
             isEdit: false,
             beforeEditInfo: {},
             pageIsLoading: false,
@@ -138,12 +138,13 @@ export default {
     methods: {
         editQB(info) {
             this.isEdit = !this.isEdit;
-            console.log(info);
             this.questionBankForm = info;
             this.questionBankForm.isfree += "";
             this.questionBankForm.status += "";
             this.adminList.push({id: info.admin_id, username: info.username});
             this.tagList.push({id: info.tag_id, name: info.tagName});
+            this.getAdminInfo();
+            this.getTagInformation();
         },
         /**
          * 获取未分配管理员信息
@@ -162,7 +163,7 @@ export default {
         getTagInformation() {
             this.tagChooseLoading = true;
             getTagInfo().then(res => {
-                this.tagList = this.tagList.concat(res.data);
+                this.tagList = res.data;
                 this.tagChooseLoading = false;
             }).catch(error => {
                 console.log(error);
@@ -170,19 +171,35 @@ export default {
                 this.tagChooseLoading = false;
             });
         },
-        submitForm() {
-            console.log(this.questionBankForm);
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if(valid) {
+                    this.pageIsLoading = true;
+                    editQuestionBank(this.questionBankForm).then(res => {
+                        this.pageIsLoading = false;
+                        if(res.code == 400) {
+                            this.$message.error("修改失败，题库名称重复");
+                        }
+                        else {
+                            this.$message.success("修改成功");
+                            this.$emit("isSuccessEdit", "success");
+                        }
+                    }).catch(error => {
+                        console.log(error);
+                        this.$message.error("修改失败");
+                        this.pageIsLoading = false;
+                    });
+                }
+            });
         },
-    },
-    mounted() {
-        this.getAdminInfo();
+        resetForm() {
+            this.adminList = [];
+            this.tagList = [];
+        }
     }
     
 }
 </script>
 
 <style scoped>
-.editQB .choosePart {
-    float: left;
-}
 </style>

@@ -92,7 +92,7 @@ export default {
             if(!name) {
                 callback(new Error("题库名称不能为空"));
             }
-            else if(!(/^[0-9a-zA-Z\u4e00-\u9fa5#]{1,20}$/).test(name)) {
+            else if(!(/^[0-9a-zA-Z\u4e00-\u9fa5#+]{1,20}$/).test(name)) {
                 callback(new Error("题库名称不合法"));
             }
             else {
@@ -161,8 +161,8 @@ export default {
                     api.createQB(this.questionBankForm).then(res => {
                         this.$message.success("创建成功");
                         this.pageIsLoading = false;
-                        this.$emit("isSuccess", "success");
                         this.isCreate = false;
+                        this.$emit("isSuccess", "success");
                     }).catch(error => {
                         console.log(error);
                         this.$message.error("创建失败");
