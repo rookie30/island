@@ -121,7 +121,9 @@ export default {
               let token = res.data.token;
               setToken(token);
               this.saveUserInfo(userInfo);
-              this.$router.push("/");
+              setTimeout(() => {
+                this.$router.push("/");
+              }, 200);
             }
             this.loading = false;
           }).catch((err) => {
@@ -129,16 +131,6 @@ export default {
             this.$message.error("账号或密码错误");
             this.loading = false;
           });
-          // this.$store.dispatch('user/login', this.loginForm)
-          //   .then(() => {
-          //     // Cookies.set("userInfo", res.data.user);
-          //     this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-          //     this.loading = false
-          //   })
-          //   .catch(() => {
-          //     this.$message.error("账号或密码错误");
-          //     this.loading = false
-          //   });
         }
       });
     },

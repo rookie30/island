@@ -7,7 +7,24 @@
         suffix-icon="el-icon-search" 
         class="searchInput">
       </el-input>
-      <el-button type="primary" class="searchBtn" icon="el-icon-search">搜索</el-button>
+      <el-select v-model="listQuery.status" class="userStatusChoose">
+        <el-option label="启用" value="1"></el-option>
+        <el-option label="禁用" value="0"></el-option>
+      </el-select>
+      <el-button 
+        type="primary"
+        class="searchBtn"
+        icon="el-icon-search"
+        @click="searchInfo">搜索</el-button>
+      <el-button 
+        icon="el-icon-plus"
+        style="float:right;"
+        @click="createAdmin">
+      </el-button>
+      <CreateAdminForm
+        ref="CreateAdminForm"
+        @isSuccess="getCreateSituation($event)">
+      </CreateAdminForm>
     </div>
 
     <el-table 
@@ -55,9 +72,9 @@
 
       <el-table-column min-width="300px" label="操作" align="center">
         <template slot-scope="{row}">
-          <!-- <el-button icon="el-icon-lock" type="warning" circle class="lockAccountBtn operationBtn" @click="openLockTip(row)" v-if="row.status == 1"></el-button>
+          <el-button icon="el-icon-lock" type="warning" circle class="lockAccountBtn operationBtn" @click="openLockTip(row)" v-if="row.status == 1"></el-button>
           <el-button icon="el-icon-unlock" type="success" circle class="lockAccountBtn operationBtn" @click="openUnLockTip(row)" v-else></el-button>
-          <el-button icon="el-icon-delete" type="danger" circle class="delAccountBtn operationBtn" @click="openDelTip"></el-button> -->
+          <el-button icon="el-icon-delete" type="danger" circle class="delAccountBtn operationBtn" @click="openDelTip"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -69,11 +86,13 @@
 import Pagination from '@/components/Pagination';
 import request from '@/utils/request';
 import * as api from "@/api/adminManage";
+import CreateAdminForm from '@/components/createAdmin/index';
 
 export default {
   name: 'adminManage',
   components: {
     Pagination,
+    CreateAdminForm
   },
   filters: {
     statusFilter(status) {
@@ -84,6 +103,9 @@ export default {
       return statusMap[status]
     },
   },
+  inject: [
+    'reload'
+  ],
   data() {
     return {
       list: null,
@@ -91,13 +113,13 @@ export default {
       listLoading: false,
       searchCont: {
         inputCont: "",
-        sex: "1",
         status: "1"
       },
       listQuery: {
         currectPage: 1,
         limit: 20,
         type: "16",
+        status: "1"
       },
     }
   },
@@ -106,8 +128,8 @@ export default {
       this.listLoading = true;
       api.getAdminList(this.listQuery).then(res => {
         console.log(res);
-        this.list = res.data.list;
-        this.total = res.data.total;
+        this.list = res.data.rows;
+        this.total = res.data.count;
         this.listLoading = false;
       }).catch(error => {
         this.listLoading = false;
@@ -115,6 +137,78 @@ export default {
         console.log(error);
       });
     },
+    /**
+     * 解锁账号提示
+     */
+    openUnLockTip(userInfo) {
+       this.$confirm("此操作将会解锁该账号,是否继续?","提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.activateAccount(userInfo.id);
+      }).catch(error => {
+        this.$message.error("操作失败");
+        console.log(error);
+      });
+    },
+    /**
+     * 删除账号提示
+     */
+    openDelTip() {
+      this.$confirm("此操作将会删除该账号信息,是否继续?","警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "error"
+      }).then(() => {
+        this.$message.success("操作成功");
+      });
+    },
+    /**
+     * 禁用账号提示
+     */
+    openLockTip(userInfo) {
+      this.$confirm("此操作将会使该账号冻结,是否继续?","提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.disableAccount(userInfo.id);
+      }).catch(error => {
+        this.$message.error("操作失败");
+        console.log(error);
+      });
+    },
+    disableAccount(userID) {
+      api.disableAccount(userID).then(res => {
+        this.$message.success("操作成功");
+        this.reloadPage();
+      });
+    },
+    activateAccount(userID) {
+      api.activateAccount(userID).then(res => {
+        this.$message.success("操作成功");
+        this.reloadPage();
+      });
+    },
+    reloadPage() {
+      this.listLoading = true;
+      setTimeout(() => {
+        this.listLoading = false;
+        this.reload();
+      }, 200);
+    },
+    createAdmin() {
+      this.$refs.CreateAdminForm.isCreateAdmin();
+    },
+    searchInfo() {
+      this.getList();
+    },
+    getCreateSituation(data) {
+      if(data == "success") {
+        this.reloadPage();
+      }
+    }
   },
   mounted() {
     this.getList();
@@ -137,6 +231,9 @@ export default {
 .adminManage .searchBtn {
   width: 110px;
   margin: 0 10px;
+}
+.adminManage .userStatusChoose {
+  width: 100px;
 }
 </style>
 

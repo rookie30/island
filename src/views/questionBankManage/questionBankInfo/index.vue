@@ -8,9 +8,12 @@
         <el-option label="禁用" value="0"></el-option>
       </el-select>
       <el-button type="primary" class="searchBtn" icon="el-icon-search">搜索</el-button>
-      <router-link to="/questionBankManagement/questionBankCreate">
-        <el-button class="addBtn" icon="el-icon-plus"></el-button>
-      </router-link>
+      <el-button 
+        class="addBtn"
+        icon="el-icon-plus"
+        @click="createQuestionBank"
+        >
+      </el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -41,19 +44,44 @@
           {{ scope.row.username == null ? "未分配" : scope.row.username }}
         </template>
       </el-table-column>
+      <el-table-column label="是否免费" width="80" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.isfree == 1 ? "免费" : "收费" }}
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" width="150" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.created_at | parseTime }}
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间" width="150" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.updated_at | parseTime }}
+        </template>
+      </el-table-column>
       <el-table-column class-name="status-col" label="题库状态" width="110" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status == 1 ? "启用" : "禁用" }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="操作" width="200">
-        <template>
-          <el-button icon="el-icon-edit-outline" circle class="operationBtn"></el-button>
+        <template slot-scope="scope">
+          <el-button 
+            icon="el-icon-edit-outline"
+            circle 
+            class="operationBtn"
+            @click="editQuestionBank(scope.row)">
+          </el-button>
           <el-button icon="el-icon-delete" circle type="danger" class="operationBtn" @click="openDelTip"></el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.currectPage" :limit.sync="listQuery.limit" @pagination="getList" />
+    <CreateQuestionBankForm
+        ref="CreateQuestionBankForm"
+        @isSuccess="getCreateInfo($event)">
+    </CreateQuestionBankForm>
+    <EditQuestionBankForm ref="EditQuestionBankForm"></EditQuestionBankForm>
   </div>
 </template>
 
@@ -62,11 +90,14 @@ import Pagination from '@/components/Pagination'
 import * as api from '@/api/questionBank'
 import CreateQuestionBankForm from "@/components/createQuestionBank/index"
 import request from '@/utils/request'
+import {parseTime} from '@/utils/index'
+import EditQuestionBankForm from '@/components/EditQuestionBank/index'
 
 export default {
   components: {
     CreateQuestionBankForm,
-    Pagination
+    Pagination,
+    EditQuestionBankForm
   },
   filters: {
     statusFilter(status) {
@@ -75,8 +106,12 @@ export default {
         0: 'danger'
       }
       return statusMap[status]
-    }
+    },
+    parseTime
   },
+  inject: [
+    'reload'
+  ],
   data() {
     return {
       list: null,
@@ -90,6 +125,8 @@ export default {
         currectPage: 1,
         limit: 20,
       },
+      isCreate: false,
+      editRow: null,
     }
   },
   methods: {
@@ -108,8 +145,9 @@ export default {
     getList() {
       this.isLoading = true;
       api.getList(this.listQuery.page).then(res => {
-        console.log(res);
+        // console.log(res);
         this.list = res.data.rows;
+        let questionInfo = res.data.rows;
         this.total = res.data.count;
         this.isLoading = false;
       }).catch(error => {
@@ -117,6 +155,25 @@ export default {
         this.$message.error("获取题库信息失败");
         console.log(error);
       });
+    },
+    createQuestionBank() {
+      this.$refs.CreateQuestionBankForm.createQB();
+    },
+    editQuestionBank(info) {
+      let i = JSON.parse(JSON.stringify(info));
+      this.$refs.EditQuestionBankForm.editQB(i);
+    },
+    getCreateInfo(createSituation) {
+      if(createSituation == "success") {
+        this.reloadPage();
+      }
+    },
+    reloadPage() {
+      this.listLoading = true;
+      setTimeout(() => {
+        this.listLoading = false;
+        this.reload();
+      }, 100);
     },
   },
   mounted() {

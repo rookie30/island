@@ -3,12 +3,29 @@
   <div class="userManage">
     <div style="margin-top: 25px;">
       <el-input 
-        placeholder="请输入搜索内容" 
-        v-model="searchCont.input" 
+        placeholder="请输入查找的用户名" 
+        v-model="listQuery.username" 
         suffix-icon="el-icon-search" 
         class="searchInput">
       </el-input>
-      <el-button type="primary" class="searchBtn" icon="el-icon-search">搜索</el-button>
+      <el-select 
+        v-model="listQuery.status"
+        class="statusChoose"
+        >
+        <el-option 
+          label="启用" 
+          value="1">
+        </el-option>
+        <el-option
+          label="禁用"
+          value="0">
+        </el-option>
+      </el-select>
+      <el-button 
+        type="primary"
+        class="searchBtn"
+        icon="el-icon-search"
+        @click="searchInfo">搜索</el-button>
     </div>
 
     <el-table 
@@ -93,15 +110,12 @@ export default {
       list: null,
       total: 0,
       listLoading: false,
-      searchCont: {
-        inputCont: "",
-        sex: "1",
-        status: "1"
-      },
       listQuery: {
         currectPage: 1,
         limit: 20,
         type: "4",
+        username: "",
+        status: "1"
       },
     }
   },
@@ -110,8 +124,8 @@ export default {
       this.listLoading = true;
       api.getList(this.listQuery).then(res => {
         console.log(res);
-        this.list = res.data.list;
-        this.total = res.data.total;
+        this.list = res.data.rows;
+        this.total = res.data.count;
         this.listLoading = false;
       }).catch(error => {
         this.listLoading = false;
@@ -188,6 +202,9 @@ export default {
         this.listLoading = false;
         this.reload();
       }, 100);
+    },
+    searchInfo() {
+      this.getList();
     }
   },
   mounted() {
@@ -212,9 +229,10 @@ export default {
 .userManage .searchInput {
   width: 280px;
 }
-.userManage .sexChoose {
-  width: 70px;
+.userManage .statusChoose {
+  width: 100px;
   margin: 0 10px;
+  color:#67C23A;
 }
 .userManage .userList {
   width: 100%;

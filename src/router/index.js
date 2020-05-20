@@ -74,13 +74,6 @@ export const constantRoutes = [
         component: () => import('@/views/questionBankManage/adminManage/index'),
         meta: { title: '管理员管理', icon: 'personManage' }
       },
-      {
-        path: 'questionBankCreate',
-        name: 'questionBankCreate',
-        hidden: true,
-        component: () => import('@/views/questionBankManage/questionBankCreate/index'),
-        meta: { title: '题库创建' }
-      },
     ]
   },
 
