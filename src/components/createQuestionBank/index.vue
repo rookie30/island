@@ -176,7 +176,7 @@ export default {
         },
         getAdminList() {
             getFreeAdmin().then(res => {
-                console.log(res);
+                // console.log(res);
                 this.adminList = res.data;
             }).catch(error => {
                 console.log(error);

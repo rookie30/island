@@ -56,6 +56,7 @@
 
 <script>
 import Breadcrumb from '@/components/Breadcrumb';
+import {removeToken} from "@/utils/auth";
 
 export default {
     name: "personalCenter",
@@ -79,8 +80,12 @@ export default {
          * 获取用户信息
          */
         getUserInfo() {
-            let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-            this.userInfo = userInfo;
+            this.$store.dispatch('user/getInfo').then(res => {
+                this.userInfo = res;
+            }).catch(error => {
+                console.log(error);
+                this.$message.error("获取用户信息失败");
+            });
         },
         changePwd() {
             this.showChangePwd = !this.showChangePwd;

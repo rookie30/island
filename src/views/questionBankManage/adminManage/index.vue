@@ -2,8 +2,8 @@
   <div class="adminManage">
     <div style="margin-top: 25px;">
       <el-input 
-        placeholder="请输入搜索内容" 
-        v-model="searchCont.input" 
+        placeholder="请输入用户名称" 
+        v-model="listQuery.username" 
         suffix-icon="el-icon-search" 
         class="searchInput">
       </el-input>
@@ -15,7 +15,7 @@
         type="primary"
         class="searchBtn"
         icon="el-icon-search"
-        @click="searchInfo">搜索</el-button>
+        @click="getList">搜索</el-button>
       <el-button 
         icon="el-icon-plus"
         style="float:right;"
@@ -111,15 +111,12 @@ export default {
       list: null,
       total: 0,
       listLoading: false,
-      searchCont: {
-        inputCont: "",
-        status: "1"
-      },
       listQuery: {
         currectPage: 1,
         limit: 20,
         type: "16",
-        status: "1"
+        status: "1",
+        username: ""
       },
     }
   },
@@ -127,7 +124,7 @@ export default {
     getList() {
       this.listLoading = true;
       api.getAdminList(this.listQuery).then(res => {
-        console.log(res);
+        // console.log(res); 
         this.list = res.data.rows;
         this.total = res.data.count;
         this.listLoading = false;
@@ -200,9 +197,6 @@ export default {
     },
     createAdmin() {
       this.$refs.CreateAdminForm.isCreateAdmin();
-    },
-    searchInfo() {
-      this.getList();
     },
     getCreateSituation(data) {
       if(data == "success") {

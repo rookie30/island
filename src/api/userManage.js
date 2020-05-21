@@ -15,7 +15,6 @@ export function activateAccount(data) {
 }
 
 export function getList(data) {
-    console.log(data);
     return request({
         url: '/v1/user/list?currectPage=' + data.currectPage
         + '&type=' + data.type + '&status=' + data.status + 

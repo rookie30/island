@@ -47,6 +47,7 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/userManage',
+    roles: ['16'],
     children: [{
       path: 'userManage',
       name: 'UserManage',
@@ -55,27 +56,27 @@ export const constantRoutes = [
     }]
   },
 
-  {
-    path: '/questionBankManagement',
-    component: Layout,
-    redirect: '/questionBankManagement/questionBankInfo',
-    name: 'questionBankManagement',
-    meta: { title: '题库管理', icon: 'example' },
-    children: [
-      {
-        path: 'questionBankInfo',
-        name: 'questionBankInfo',
-        component: () => import('@/views/questionBankManage/questionBankInfo/index'),
-        meta: { title: '题库信息', icon: 'questionBank' }
-      },
-      {
-        path: 'administratorManagement',
-        name: 'administratorManagement',
-        component: () => import('@/views/questionBankManage/adminManage/index'),
-        meta: { title: '管理员管理', icon: 'personManage' }
-      },
-    ]
-  },
+  // {
+  //   path: '/questionBankManagement',
+  //   component: Layout,
+  //   redirect: '/questionBankManagement/questionBankInfo',
+  //   name: 'questionBankManagement',
+  //   meta: { title: '题库管理', icon: 'example' },
+  //   children: [
+  //     {
+  //       path: 'questionBankInfo',
+  //       name: 'questionBankInfo',
+  //       component: () => import('@/views/questionBankManage/questionBankInfo/index'),
+  //       meta: { title: '题库信息', icon: 'questionBank' }
+  //     },
+  //     {
+  //       path: 'administratorManagement',
+  //       name: 'administratorManagement',
+  //       component: () => import('@/views/questionBankManage/adminManage/index'),
+  //       meta: { title: '管理员管理', icon: 'personManage' }
+  //     },
+  //   ]
+  // },
 
   {
     path: '/personalCenter',
@@ -90,8 +91,6 @@ export const constantRoutes = [
     }]
   },
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
@@ -99,6 +98,33 @@ const createRouter = () => new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
+
+export const asyncRoutes = [
+  {
+    path: '/questionBankManagement',
+    component: Layout,
+    redirect: '/questionBankManagement/questionBankInfo',
+    name: 'questionBankManagement',
+    meta: { title: '题库管理', icon: 'example', role: ['32']},
+    children: [
+      {
+        path: 'questionBankInfo',
+        name: 'questionBankInfo',
+        component: () => import('@/views/questionBankManage/questionBankInfo/index'),
+        meta: { title: '题库信息', icon: 'questionBank', role: ['32']}
+      },
+      {
+        path: 'administratorManagement',
+        name: 'administratorManagement',
+        component: () => import('@/views/questionBankManage/adminManage/index'),
+        meta: { title: '管理员管理', icon: 'personManage', role: ['32'] }
+      },
+    ]
+  },
+  
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
 
 const router = createRouter()
 

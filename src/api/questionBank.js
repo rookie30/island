@@ -36,6 +36,10 @@ export function getTagInfo(token) {
     })
 }
 
+/**
+ * 题库编辑
+ * @param {*} data 
+ */
 export function editQuestionBank(data) {
     return request({
         url: '/v1/library/modify',

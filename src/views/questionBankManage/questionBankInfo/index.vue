@@ -199,7 +199,7 @@ export default {
      */
     getTagInfomation() {
       api.getTagInfo().then(res => {
-        console.log(res);
+        // console.log(res);
         this.tagList = res.data;
       }).catch(error => {
         this.$message.error("获取题库标签失败");

@@ -7,7 +7,8 @@ import request from "@/utils/request";
 export function getAdminList(data) {
     return request({
         url: '/v1/user/list?currectPage=' + data.currectPage
-        + '&type=' + data.type + '&status=' + data.status,
+        + '&type=' + data.type + '&status=' + data.status + 
+        '&username=' + data.username,
         method: 'get',
         data
     })

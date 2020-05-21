@@ -123,7 +123,6 @@ export default {
     getList() {
       this.listLoading = true;
       api.getList(this.listQuery).then(res => {
-        console.log(res);
         this.list = res.data.rows;
         this.total = res.data.count;
         this.listLoading = false;

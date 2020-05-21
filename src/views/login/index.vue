@@ -1,7 +1,12 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
+    <el-form 
+      ref="loginForm" 
+      :model="loginForm" 
+      :rules="loginRules" 
+      class="login-form" 
+      auto-complete="on" 
+      label-position="left">
       <div class="title-container">
         <h3 class="title">旧岛管理系统</h3>
       </div>
@@ -41,7 +46,13 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button 
+        type="primary" 
+        v-loading="loading" 
+        style="width:100%;margin-bottom:30px;" 
+        @click.native.prevent="handleLogin">
+        登录
+      </el-button>
 
     </el-form>
   </div>
@@ -115,22 +126,34 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          request({"url": "/v1/token/signin", method: "post", data: this.loginForm}).then((res) => {
-            if(res.code == 200) {
-              let userInfo = res.data.user;
-              let token = res.data.token;
-              setToken(token);
-              this.saveUserInfo(userInfo);
-              setTimeout(() => {
-                this.$router.push("/");
-              }, 200);
-            }
+          this.loading = true;
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            this.$router.push({ path: this.redirect || '/' });
             this.loading = false;
-          }).catch((err) => {
-            console.log(err);
-            this.$message.error("账号或密码错误");
+          }).catch(() => {
             this.loading = false;
           });
+          // request({"url": "/v1/token/signin", method: "post", data: this.loginForm}).then((res) => {
+          //   if(res.code == 200) {
+          //     let userInfo = res.data.user;
+          //     // console.log(userInfo);
+          //     let token = res.data.token;
+          //     setToken(token);
+          //     this.saveUserInfo(userInfo);
+          //     setTimeout(() => {
+          //       this.loading = false;
+          //       this.$router.push("/");
+          //     }, 500);
+          //   }
+          //   else {
+          //     this.$message.error("登陆失败");
+          //     this.loading = false;
+          //   }
+          // }).catch((err) => {
+          //   console.log(err);
+          //   this.$message.error("账号或密码错误");
+          //   this.loading = false;
+          // });
         }
       });
     },
@@ -141,7 +164,6 @@ export default {
      * @returns void
      */
     saveUserInfo(userInfo) {
-      // sessionStorage.setItem("token", token);
       sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
     },
   }
