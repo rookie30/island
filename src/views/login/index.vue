@@ -128,43 +128,15 @@ export default {
         if (valid) {
           this.loading = true;
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' });
-            this.loading = false;
+            setTimeout(() => {
+              this.$router.push({ path: this.redirect || '/' });
+              this.loading = false;
+            },250);
           }).catch(() => {
             this.loading = false;
           });
-          // request({"url": "/v1/token/signin", method: "post", data: this.loginForm}).then((res) => {
-          //   if(res.code == 200) {
-          //     let userInfo = res.data.user;
-          //     // console.log(userInfo);
-          //     let token = res.data.token;
-          //     setToken(token);
-          //     this.saveUserInfo(userInfo);
-          //     setTimeout(() => {
-          //       this.loading = false;
-          //       this.$router.push("/");
-          //     }, 500);
-          //   }
-          //   else {
-          //     this.$message.error("登陆失败");
-          //     this.loading = false;
-          //   }
-          // }).catch((err) => {
-          //   console.log(err);
-          //   this.$message.error("账号或密码错误");
-          //   this.loading = false;
-          // });
         }
       });
-    },
-    /**
-     * 账号信息存储
-     * @param {object} userInfo 
-     * @param {String} token
-     * @returns void
-     */
-    saveUserInfo(userInfo) {
-      sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
     },
   }
 }

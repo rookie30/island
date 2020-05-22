@@ -59,9 +59,8 @@ const actions = {
 
         // const { roles, name, avatar } = data
         const { name, avatar } = data
-        const roles = []
-        roles.push(data.type + "")
-
+        const roles = [data.type + ""]
+        
         if(!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
@@ -78,14 +77,16 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
+      try {
+          removeToken() // must remove  token  first
+          sessionStorage.clear()
+          resetRouter()
+          commit('RESET_STATE')
+          resolve()
+      }
+      catch(error) {
         reject(error)
-      })
+      }
     })
   },
 

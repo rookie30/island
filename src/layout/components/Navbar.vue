@@ -30,6 +30,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import auth, { removeToken } from "@/utils/auth"
+import { resetRouter } from '@/router'
 
 export default {
   components: {
@@ -46,10 +47,6 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    // async logout() {
-    //   await this.$store.dispatch('user/logout')
-    //   this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    // },
     /**
      * 显示退出登录提示
      */
@@ -59,10 +56,12 @@ export default {
         cancelButtonText: "取消",
         type: "info"
       }).then(() => {
-        sessionStorage.clear();
-        removeToken();
-        this.$router.push("/login");
+        this.logout();
       });
+    },
+    async logout() {
+      await this.$store.dispatch('user/logout')
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
 }

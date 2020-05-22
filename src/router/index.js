@@ -38,45 +38,24 @@ export const constantRoutes = [
   },
 
   {
+    path: '/',
+    component: Layout,
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        name: 'home',
+        component: () => import('@/views/home/index'),
+        meta: { title: '首页', icon: 'dashboard'},
+      },
+    ]
+  },
+
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
-
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/userManage',
-    roles: ['16'],
-    children: [{
-      path: 'userManage',
-      name: 'UserManage',
-      component: () => import('@/views/userManage/index'),
-      meta: { title: '用户管理', icon: 'dashboard' },
-    }]
-  },
-
-  // {
-  //   path: '/questionBankManagement',
-  //   component: Layout,
-  //   redirect: '/questionBankManagement/questionBankInfo',
-  //   name: 'questionBankManagement',
-  //   meta: { title: '题库管理', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'questionBankInfo',
-  //       name: 'questionBankInfo',
-  //       component: () => import('@/views/questionBankManage/questionBankInfo/index'),
-  //       meta: { title: '题库信息', icon: 'questionBank' }
-  //     },
-  //     {
-  //       path: 'administratorManagement',
-  //       name: 'administratorManagement',
-  //       component: () => import('@/views/questionBankManage/adminManage/index'),
-  //       meta: { title: '管理员管理', icon: 'personManage' }
-  //     },
-  //   ]
-  // },
 
   {
     path: '/personalCenter',
@@ -101,27 +80,55 @@ const createRouter = () => new Router({
 
 export const asyncRoutes = [
   {
+    path: '/userManage',
+    component: Layout,
+    redirect: '/userManage',
+    children: [{
+      path: 'userManage',
+      name: 'userManage',
+      component: () => import('@/views/userManage/index'),
+      meta: { title: '用户管理', icon: 'dashboard', roles: ['32']},
+    }]
+  },
+
+  {
     path: '/questionBankManagement',
     component: Layout,
     redirect: '/questionBankManagement/questionBankInfo',
     name: 'questionBankManagement',
-    meta: { title: '题库管理', icon: 'example', role: ['32']},
+    meta: { title: '题库管理', icon: 'example', roles: ['32']},
     children: [
       {
         path: 'questionBankInfo',
         name: 'questionBankInfo',
         component: () => import('@/views/questionBankManage/questionBankInfo/index'),
-        meta: { title: '题库信息', icon: 'questionBank', role: ['32']}
+        meta: { title: '题库信息', icon: 'questionBank', roles: ['32']}
       },
       {
         path: 'administratorManagement',
         name: 'administratorManagement',
         component: () => import('@/views/questionBankManage/adminManage/index'),
-        meta: { title: '管理员管理', icon: 'personManage', role: ['32'] }
+        meta: { title: '管理员管理', icon: 'personManage', roles: ['32'] }
       },
     ]
   },
   
+  {
+    path: '/chapterManage',
+    component: Layout,
+    redirect: 'chapterManage/index',
+    meta: {roles: ['16']},
+    children: [
+      {
+        path: 'index',
+        name: 'index',
+        component: () => import('@/views/chapterManage/index'),
+        meta: { title: '章节管理', icon: 'personManage', roles: ['16'] }
+      },
+    ]
+  },
+
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
