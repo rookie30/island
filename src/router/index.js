@@ -128,6 +128,22 @@ export const asyncRoutes = [
     ]
   },
 
+  {
+    path: '/questionManage',
+    component: Layout,
+    redirect: 'questionManage/index',
+    meta: {roles: ['16']},
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        name: 'index',
+        component: () => import('@/views/questionManage/index'),
+        meta: { title: '题目管理', icon: 'personManage', roles: ['16'] }
+      },
+    ]
+  },
+
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
