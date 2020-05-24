@@ -1,3 +1,4 @@
+<!-- 章节信息编辑页  -->
 <template>
     <div class="editChapter">
         <el-dialog
@@ -30,7 +31,7 @@ export default {
     methods: {
         editChapterInfo(info) {
             this.isEdit = !this.isEdit;
-            this.chapterInfo.name = info.name;
+            this.chapterInfo = info;
         }
     }
 }

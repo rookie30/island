@@ -17,6 +17,11 @@
                 </el-option>
             </el-select>
             <span class="chapterTip">{{ chapterName }}</span>
+            <el-button 
+                icon="el-icon-plus" 
+                style="float:right;margin-right:20px;"
+                @click="createQuestion">
+            </el-button>
         </div>
         <el-table 
             v-loading="isLoading"
@@ -89,8 +94,12 @@
             </el-table-column>
         </el-table>
         <EditQuestion
-            ref="editQuestion">
+            ref="editQuestion"
+            @isSuccess="getEditInfo($event)">
         </EditQuestion>
+        <CreateQuestion
+            ref="createQuestion">
+        </CreateQuestion>
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
     </div>
 </template>
@@ -98,14 +107,19 @@
 <script>
 import Pagination from '@/components/Pagination';
 import * as api from '@/api/questionManage';
-import EditQuestion from '@/components/EditQuestion/index';
+import EditQuestion from '@/components/EditQuestion'; // 题目编辑页
+import CreateQuestion from '@/components/CreateQuestion'; // 题目创建页
 
 export default {
     name: 'questionManage',
     components: {
         Pagination,
         EditQuestion,
+        CreateQuestion,
     },
+    inject: [
+        'reload'
+    ],
     filters: {
         levelFilter(level) {
             const levelMap = {
@@ -166,7 +180,7 @@ export default {
         getList() {
             this.isLoading = true;
             api.getQuestionInfo(this.listQuery).then(res => {
-                console.log(res);
+                // console.log(res);
                 this.questionInfo = res.data.rows;
                 this.total = res.data.count;
                 this.isLoading = false;
@@ -178,8 +192,27 @@ export default {
         },
 
         editQuestion(info) {
-            this.$refs.editQuestion.editQuestionInfo(info);
-        }
+            let questioInfo = JSON.parse(JSON.stringify(info));
+            this.$refs.editQuestion.editQuestionInfo(questioInfo);
+        },
+
+        reloadPage() {
+            this.listLoading = true;
+            setTimeout(() => {
+                this.listLoading = false;
+                this.reload();
+            }, 200);
+        },
+
+        getEditInfo(situation) {
+            if(situation == "success") {
+                this.reloadPage();
+            }
+        },
+
+        createQuestion() {
+            this.$refs.createQuestion.createQuestion();
+        },
 
     },
     mounted() {

@@ -63,6 +63,7 @@ export default {
                 this.chapterInfo = res.data.rows;
                 this.count = res.count;
                 this.isLoading = false;
+                console.log(res);
             }).catch(error => {
                 console.log(error);
                 this.$message.error("获取章节信息失败");
