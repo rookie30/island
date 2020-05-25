@@ -19,3 +19,11 @@ export function editQuestionInfo(data) {
         data
     })
 }
+
+export function createQuestionInfo(data) {
+    return request({
+        url: '/v1/exercise/add',
+        method: 'post',
+        data
+    })
+}

@@ -1,6 +1,9 @@
 <!-- 章节管理 -->
 <template>
     <div class="chapterManage">
+        <div class="header">
+            <el-button icon="el-icon-plus" style="float:right;"></el-button>
+        </div>
         <div class="content">
             <el-table
                 v-loading="isLoading"
@@ -63,7 +66,6 @@ export default {
                 this.chapterInfo = res.data.rows;
                 this.count = res.count;
                 this.isLoading = false;
-                console.log(res);
             }).catch(error => {
                 console.log(error);
                 this.$message.error("获取章节信息失败");
@@ -73,7 +75,6 @@ export default {
 
         editChapter(info) {
             let chapterInfo = JSON.parse(JSON.stringify(info));
-            console.log(chapterInfo);
             this.$refs.editChapterForm.editChapterInfo(chapterInfo);
         },
 
@@ -89,5 +90,7 @@ export default {
 </script>
 
 <style scoped>
-
+.chapterManage .header {
+    margin: 15px;
+}
 </style>

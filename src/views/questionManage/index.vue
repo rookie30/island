@@ -98,7 +98,8 @@
             @isSuccess="getEditInfo($event)">
         </EditQuestion>
         <CreateQuestion
-            ref="createQuestion">
+            ref="createQuestion"
+            @isCreate="getCreateInfo($event)">
         </CreateQuestion>
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
     </div>
@@ -161,7 +162,7 @@ export default {
             listQuery: {
                 currentPage: 1,
                 limit: 20,
-                chapter: '',
+                chapter: '', // 章节id
                 type: 1
             },
         }
@@ -211,9 +212,15 @@ export default {
         },
 
         createQuestion() {
-            this.$refs.createQuestion.createQuestion();
+            let chapterID = this.listQuery.chapter;
+            this.$refs.createQuestion.createQuestion(chapterID);
         },
 
+        getCreateInfo(situation) {
+            if(situation == "success") {
+                this.reloadPage();
+            }
+        }
     },
     mounted() {
         this.getChapterInfo();
