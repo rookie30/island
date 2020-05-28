@@ -70,6 +70,19 @@ export const constantRoutes = [
     }]
   },
 
+  {
+    path: '/noticeCenter',
+    component: Layout,
+    redirect: '/noticeCenter/index',
+    hidden: true,
+    children: [{
+      path: 'index',
+      name: 'noticeCenter',
+      component: () => import('@/views/noticeCenter/index'),
+      meta: {title: '通知中心'}
+    }]
+  }
+
 ]
 
 const createRouter = () => new Router({
@@ -121,7 +134,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        name: 'index',
+        name: 'chapterManage',
         component: () => import('@/views/chapterManage/index'),
         meta: { title: '章节管理', icon: 'personManage', roles: ['16'] }
       },
@@ -137,9 +150,24 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        name: 'index',
+        name: 'questionManage',
         component: () => import('@/views/questionManage/index'),
         meta: { title: '题目管理', icon: 'personManage', roles: ['16'] }
+      },
+    ]
+  },
+  
+  {
+    path: '/examManage',
+    component: Layout,
+    redirect: 'examManage/examInfo',
+    meta: {roles: ['16']},
+    children: [
+      {
+        path: 'examInfo',
+        name: 'examInfo',
+        component: () => import('@/views/examManage/examInfo/index'),
+        meta: { title: '考试管理', icon: 'personManage', roles: ['16'] }
       },
     ]
   },

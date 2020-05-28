@@ -1,9 +1,9 @@
-<!-- 章节信息编辑页  -->
+<!-- 章节创建页  -->
 <template>
-    <div class="editChapter">
+    <div class="createChapter">
         <el-dialog
-            title="章节信息编辑"
-            :visible.sync="isEdit">
+            title="章节创建"
+            :visible.sync="isCreate">
             <el-form
                 :model="chapterInfo"
                 ref="chapterInfoForm"
@@ -12,11 +12,14 @@
                 <el-form-item label="章节名称" label-width="80px" prop="name">
                     <el-input v-model="chapterInfo.name" class="infoInput"></el-input>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item style="margin-bottom:0;">
                     <el-button 
                         type="primary" 
                         class="confirmBtn"
-                        @click="submitForm('chapterInfoForm')">保存</el-button>
+                        style="float:right;"
+                        @click="submitForm('chapterInfoForm')">
+                        创建
+                    </el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -24,20 +27,22 @@
 </template>
 
 <script>
-import {editChapterInfo} from '@/api/chapterManage';
+import {createChapterInfo} from '@/api/chapterManage';
 
 export default {
-    name: 'editChapter',
+    name: 'createChapter',
     data() {
-         let checkName = (rule, content, callback) => {
+        let checkName = (rule, content, callback) => {
             if(!content) {
                 return callback(new Error("章节名称不能为空"));
             }
             callback();
         };
         return {
-            isEdit: false,
-            chapterInfo: {},
+            isCreate: false,
+            chapterInfo: {
+                library_id: ''
+            },
             rules: {
                 name: [
                     {validator: checkName, trigger: 'blur'},
@@ -46,25 +51,25 @@ export default {
         }
     },
     methods: {
-        editChapterInfo(info) {
-            this.isEdit = !this.isEdit;
-            this.chapterInfo = info;
+        createChapterInfo(libraryID) {
+            this.isCreate = !this.isCreate;
+            this.chapterInfo.library_id = libraryID;
         },
 
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if(valid) {
-                    editChapterInfo(this.chapterInfo).then(res => {
+                    createChapterInfo(this.chapterInfo).then(res => {
                         if(res.code == 200) {
-                            this.$message.success("修改成功");
-                            this.$emit("editSituation", "success");
+                            this.$message.success("创建成功");
+                            this.$emit("createSituation", "success");
                         }
                         else {
-                            this.$message.error("修改失败");
+                            this.$message.error("创建失败");
                         }
                     }).catch(error => {
                         console.log(error);
-                        this.$message.error("修改失败");
+                        this.$message.error("创建失败");
                     });
                 }
                 else {
@@ -75,9 +80,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.editChapter .confirmBtn{
-    float: right;
-}
-</style>

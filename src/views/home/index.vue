@@ -6,12 +6,27 @@
 </template>
 
 <script>
+import {getInfo} from '@/api/user';
+
 export default {
     name: 'home',
     data() {
         return {
-
         }
+    },
+    methods: {
+        getUserInfo() {
+            getInfo().then(res => {
+                const userInfo = JSON.stringify(res.data);
+                sessionStorage.setItem('userInfo', userInfo);
+            }).catch(error => {
+                console.log(error);
+                this.$message.error("获取用户信息失败");
+            });
+        }
+    },
+    mounted() {
+        this.getUserInfo();
     }
 }
 </script>

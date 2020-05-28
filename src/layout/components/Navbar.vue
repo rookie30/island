@@ -8,13 +8,24 @@
       <el-dropdown class="avatar-container">
         <div class="avatar-wrapper">
           <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589352807402&di=b6f28be999586377e548179492728d5b&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0ff41bd5ad6eddc4da68cd7b39dbb6fd536633a6.jpg" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <i class="el- -caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/personalCenter">
             <el-dropdown-item>
               个人中心
             </el-dropdown-item>
+          </router-link>
+          <router-link to="/noticeCenter">
+            <el-badge 
+              :value="unReadNoticeNum" 
+              class="item" 
+              :max="99"
+              :hidden="unReadNoticeNum > 0 ? false : true">
+              <el-dropdown-item>
+                通知中心
+              </el-dropdown-item>
+            </el-badge>
           </router-link>
           <el-dropdown-item divided @click.native="openLogOutTip">
             <span style="display:block;color:red;">退出登录</span>
@@ -31,6 +42,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import auth, { removeToken } from "@/utils/auth"
 import { resetRouter } from '@/router'
+import {getNoticeInfo} from '@/api/notice';
 
 export default {
   components: {
@@ -42,6 +54,11 @@ export default {
       'sidebar',
       'avatar'
     ])
+  },
+  data() {
+    return {
+      unReadNoticeNum: 0
+    }
   },
   methods: {
     toggleSideBar() {
@@ -62,7 +79,19 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    getUnReadNoticeNum() {
+      // const userID = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      // getNoticeInfo(userID).then(res => {
+      //   console.log(res);
+      // }).catch(error => {
+      //   console.log(error);
+      //   this.$message.error("获取通知信息失败");
+      // });
     }
+  },
+  mounted() {
+    this.getUnReadNoticeNum();
   }
 }
 </script>
@@ -86,6 +115,10 @@ export default {
     &:hover {
       background: rgba(0, 0, 0, .025)
     }
+  }
+  .item {
+    margin-top: 10px;
+    margin-right: 40px;
   }
 
   .breadcrumb-container {

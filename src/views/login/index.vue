@@ -127,13 +127,14 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          this.$store.dispatch('user/login', this.loginForm).then(res => {
             setTimeout(() => {
               this.$router.push({ path: this.redirect || '/' });
               this.loading = false;
-            },250);
-          }).catch(() => {
+            },300);
+          }).catch(error => {
             this.loading = false;
+            this.$message.error("账号或密码错误");
           });
         }
       });
