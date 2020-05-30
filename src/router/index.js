@@ -183,20 +183,28 @@ export const asyncRoutes = [
     path: '/paperManage',
     component: Layout,
     redirect: 'paperManage/paperInfo',
-    meta: {title: '试卷管理', roles: ['16']},
+    meta: {roles: ['16']},
     children: [
       {
         path: 'paperInfo',
         name: 'paperInfo',
         component: () => import('@/views/paperManage/paperInfo/index'),
-        meta: { title: '试卷管理', icon: 'examManage', roles: ['16'] },
+        meta: { title: '试卷管理', icon: 'paper', roles: ['16'] },
       },
+      {
+        path:'paperDetail',
+        name:'paperDetail',
+        component:()=>import('@/views/paperManage/paperDetail/index'),
+        hidden:true,
+        meta:{title:'试卷详情',roles:['16']}
+      }
     ]
   },
 
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
+  
 ]
 
 const router = createRouter()
