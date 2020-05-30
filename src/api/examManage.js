@@ -11,3 +11,12 @@ export function getExamInfo(data) {
         params: data
     })
 }
+
+
+export function getPaperInfo(data) {
+    return request({
+        url: 'v1/paper/list',
+        method: 'get',
+        params: data
+    })
+}
