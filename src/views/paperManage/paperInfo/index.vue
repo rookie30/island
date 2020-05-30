@@ -1,37 +1,41 @@
 <template>
   <div class="paper-container">
+    <div class="toolbar">
+      <el-button icon="el-icon-plus" style="float:right;margin-right:10px;" @click="handleAdd"></el-button>
+    </div>
+
     <el-table v-loading="listLoading" :data="list" style="width: 100%">
-      <el-table-column align="center" label="id" width="160">
+      <el-table-column align="center" label="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="所属题库" width="160">
+      <el-table-column align="center" label="所属题库">
         <template slot-scope="scope">
           <span>{{ scope.row.library_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="试卷名" width="160">
+      <el-table-column align="center" label="试卷名">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="总分" width="160">
+      <el-table-column align="center" label="总分">
         <template slot-scope="scope">
           <span>{{ scope.row.score }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="状态" width="200">
+      <el-table-column align="center" label="状态">
         <template slot-scope="scope">
           <span>{{ scope.row.status===1?'正常':'已禁用' }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="类型" width="200">
+      <el-table-column align="center" label="类型">
         <template slot-scope="scope">
           <span>{{ scope.row.type===1?'已发布':'草稿' }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="操作" width="300">
         <template slot-scope="scope">
           <router-link :to="'/paperManage/paperDetail?paper_id='+scope.row.id">
             <el-button type="primary" size="small" icon="el-icon-edit">详情</el-button>
@@ -89,42 +93,49 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(() => {
-        // api 请求
-        api.banPaper(paper_id).then(response=>{
-          console.log(response);
-          this.$message.success('禁用成功');
-          this.reload();
-        }).catch(err=>{
-          this.$message.error(err.message);
+      })
+        .then(() => {
+          // api 请求
+          api
+            .banPaper(paper_id)
+            .then(response => {
+              console.log(response);
+              this.$message.success("禁用成功");
+              this.reload();
+            })
+            .catch(err => {
+              this.$message.error(err.message);
+            });
         })
-
-      }).catch(() => {
+        .catch(() => {
           this.$message.info("已取消操作");
-      });
+        });
     },
     handleAdd() {
-      this.$message.success("添加");
+      this.$router.push({path:'/paperManage/paperDetail?add=true'});
     },
     handleDelete(paper_id) {
       this.$confirm("此操作将永久删除该试卷, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(() => {
-        
-        // api 请求
-        api.deletePaper(paper_id).then(response=>{
-          console.log(response);
-          this.$message.success('删除成功');
-          this.reload();
-        }).catch(err=>{
-          this.$message.error(err.message);
+      })
+        .then(() => {
+          // api 请求
+          api
+            .deletePaper(paper_id)
+            .then(response => {
+              console.log(response);
+              this.$message.success("删除成功");
+              this.reload();
+            })
+            .catch(err => {
+              this.$message.error(err.message);
+            });
         })
-
-      }).catch(() => {
-        this.$message.info("已取消操作");
-      });
+        .catch(() => {
+          this.$message.info("已取消操作");
+        });
     },
     getList() {
       this.listLoading = true;
