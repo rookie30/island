@@ -6,36 +6,38 @@
             <el-form 
                 :model="examInfo" 
                 ref="examInfoForm" 
-                label-width="80px">
+                label-width="80px"
+                :rules="rules">
                 <el-form-item label="考试名称" prop="name">
                     <el-input v-model="examInfo.name"></el-input>
                 </el-form-item>
-                <el-form-item label="试卷选择" prop="paper">
-                    <el-select v-model="examInfo.paper">
-                        
+                <el-form-item label="试卷选择" prop="paper_id">
+                    <el-select v-model="examInfo.paper_id" placeholder="情选择试卷">
+                        <el-option
+                            v-for="item in paperList"
+                            :key="item.id"
+                            :value="item.id"
+                            :label="item.name">
+                        </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="考试时间">
+                <el-form-item label="考试时间" prop="start">
                     <el-date-picker
                         v-model="examTime"
                         type="datetimerange"
                         range-separator="至"
                         start-placeholder="开始时间"
                         end-placeholder="结束时间"
-                        @change="selectTime">
+                        :clearable="false"
+                        @change="selectTime"
+                        @blur="checkTime">
                     </el-date-picker>
                 </el-form-item>
-                <!-- <el-form-item label="开始时间" prop="start">
-
-                </el-form-item>
-                <el-form-item label="结束时间" prop="end">
-                    
-                </el-form-item> -->
                 <el-form-item style="margin-bottom:0;">
                     <el-button 
                         type="primary"
                         style="float:right;"
-                        @click="submitForm">
+                        @click="submitForm('examInfoForm')">
                         创建
                     </el-button>
                 </el-form-item>
@@ -46,33 +48,104 @@
 
 <script>
 import {parseTime} from '@/utils/index';
+import * as api from '@/api/examManage';
 
 export default {
     name: 'createExam',
     data() {
+        let checkName = (rule, name, callback) => {
+            if(!name) {
+                return callback(new Error("试卷名称不能为空"));
+            }
+            callback();
+        };
+        let checkTime = (rule, examTime, callback) => {
+            if(!examTime) {
+                return callback(new Error("情选择考试时间"));
+            }
+            callback();
+        };
+        let checkPaper = (rule, paper, callback) => {
+            if(!paper) {
+                return callback(new Error("情选择试卷"));
+            }
+            callback();
+        };
         return {
             examInfo: {
                 name: '',
-                paper: '',
+                paper_id: '',
                 start: '',
                 end: ''
             },
+            paperList: {},
             examTime: '',
             isLoading: false,
             libraryInfo: {
-                library_id: '',
+                library_id: 1,
                 type: 2
+            },
+            rules: {
+                name: [
+                    {validator: checkName, trigger: 'blur'}
+                ],
+                start: [
+                    {validator: checkTime, trigger: 'blur'}
+                ],
+                paper_id: [
+                    {validator: checkPaper, trigger: 'blur'}
+                ]
             }
         }
     },
     methods: {
-        submitForm() {
-            console.log(this.examInfo);
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    api.createExam(this.examInfo).then(res => {
+                        if(res.code == 200) {
+                            this.$message.success("创建成功");
+                            setTimeout(() => {
+                                this.$router.push("/examManage/examInfo");
+                            }, 300);
+                            
+                        }
+                        else {
+                            this.$message.error("创建失败");
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        this.$message.error("创建失败");
+                    });
+                } 
+                else {
+                    return false;
+                }
+            });
         },
         selectTime() {
-            this.examInfo.start = parseTime(this.examTime[0]);
-            this.examInfo.end = parseTime(this.examTime[1]);
+            if(this.examTime){
+                this.examInfo.start = parseTime(this.examTime[0]);
+                this.examInfo.end = parseTime(this.examTime[1]);
+            }
+            else {
+                this.examInfo.start = '';
+                this.examInfo.end = '';
+            }
+        },
+        checkTime() {
+            if(!this.examTime) {
+                this.examInfo.start = '';
+                this.examInfo.end = '';
+            }
         }
+    },
+    mounted() {
+        api.getPaperInfo(this.libraryInfo).then(res => {
+            this.paperList = res.data;
+        }).catch(err => {
+            console.log(err);
+        });
     }
 }
 </script>
@@ -82,7 +155,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 10%;
 }
 .createExam .examCard {
     width: 80%;
