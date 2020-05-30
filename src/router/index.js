@@ -161,13 +161,13 @@ export const asyncRoutes = [
     path: '/examManage',
     component: Layout,
     redirect: 'examManage/examInfo',
-    meta: {roles: ['16']},
+    meta: { title: '考试管理', roles: ['16'] },
     children: [
       {
         path: 'examInfo',
         name: 'examInfo',
         component: () => import('@/views/examManage/examInfo/index'),
-        meta: { title: '考试管理', icon: 'examManage', roles: ['16'] }
+        meta: { title: '考试信息', icon: 'examManage', roles: ['16'] },
       },
       {
         path: 'createExam',
@@ -177,10 +177,30 @@ export const asyncRoutes = [
         meta: { title: '考试组卷', icon: 'examManage', roles: ['16'] }
       },
       {
-        path: ''
+        path: 'createModel',
+        name: 'createModel',
+        hidden: true,
+        component: () => import('@/views/examManage/createModel/index'),
+        meta: { title: '创建模板', icon: 'examManage', roles: ['16'] }
       },
+      
     ]
   },
+
+  {
+    path: '/paperManage',
+    component: Layout,
+    redirect: 'paperManage/paperInfo',
+    meta: {title: '试卷管理', roles: ['16']},
+    children: [
+      {
+        path: 'paperInfo',
+        name: 'paperInfo',
+        component: () => import('@/views/PaperManage/paperInfo/index'),
+        meta: { title: '考试信息', icon: 'examManage', roles: ['16'] },
+      },
+    ]
+  }
 
 
   // 404 page must be placed at the end !!!

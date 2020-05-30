@@ -9,7 +9,7 @@
         <el-option :value="2" label="批改中"> </el-option>
         <el-option :value="3" label="已结束"> </el-option>
       </el-select>
-	  <router-link to="/examManage/createExam">
+	  <router-link to="/examManage/createModel">
 		<el-button
 			icon="el-icon-plus" 
 			style="float:right;margin-right:10px;">
@@ -98,7 +98,7 @@ export default {
         .then(res => {
           this.isLoading = false;
           this.examInfo = res.data;
-          // console.log(res);
+          console.log(res);
         })
         .catch(error => {
           console.log(error);

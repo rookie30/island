@@ -80,19 +80,19 @@ export default {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
-    getUnReadNoticeNum() {
-      const userID = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      const userInfo = {"from": userID};
-      getNoticeInfo(userInfo).then(res => {
-        console.log(res);
-      }).catch(error => {
-        console.log(error);
-        this.$message.error("获取通知信息失败");
-      });
-    }
+    // getUnReadNoticeNum() {
+    //   const userID = JSON.parse(sessionStorage.getItem("userInfo")).id;
+    //   const userInfo = {"from": userID};
+    //   getNoticeInfo(userInfo).then(res => {
+    //     console.log(res);
+    //   }).catch(error => {
+    //     console.log(error);
+    //     this.$message.error("获取通知信息失败");
+    //   });
+    // }
   },
   mounted() {
-    this.getUnReadNoticeNum();
+    // this.getUnReadNoticeNum();
   }
 }
 </script>
