@@ -9,10 +9,12 @@
         <el-option :value="2" label="批改中"> </el-option>
         <el-option :value="3" label="已结束"> </el-option>
       </el-select>
-      <el-button
-        icon="el-icon-plus"
-        style="float:right;margin-right:10px;">
-      </el-button>
+	  <router-link to="/examManage/createExam">
+		<el-button
+			icon="el-icon-plus" 
+			style="float:right;margin-right:10px;">
+		</el-button>
+	  </router-link>
     </div>
     <el-table :data="examInfo" highlight-current-row v-loading="isLoading" fit>
       <el-table-column align="center" label="ID" width="80">
@@ -38,7 +40,8 @@
       <el-table-column
         align="center"
         label="考试状态"
-        v-if="examStatus.status == ''">
+        v-if="examStatus.status == ''"
+      >
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | statusTypeFilter">
             {{ scope.row.status | statusFilter }}
@@ -60,21 +63,21 @@ export default {
     parseTime,
     statusFilter(status) {
       const statusMap = {
-        0: '报名中',
-        1: '进行中',
-        2: '批改中',
-        3: '已结束'
-      }
-      return statusMap[status]
+        0: "报名中",
+        1: "进行中",
+        2: "批改中",
+        3: "已结束"
+      };
+      return statusMap[status];
     },
     statusTypeFilter(status) {
       const statusMap = {
-        1: 'success',
-        2: 'warning',
-        3: 'info'
-      }
-      return statusMap[status]
-    },
+        1: "success",
+        2: "warning",
+        3: "info"
+      };
+      return statusMap[status];
+    }
   },
   data() {
     return {
@@ -95,7 +98,7 @@ export default {
         .then(res => {
           this.isLoading = false;
           this.examInfo = res.data;
-          console.log(res);
+          // console.log(res);
         })
         .catch(error => {
           console.log(error);

@@ -57,7 +57,7 @@ export default {
   },
   data() {
     return {
-      unReadNoticeNum: 0
+      unReadNoticeNum: 0,
     }
   },
   methods: {
@@ -81,13 +81,14 @@ export default {
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     getUnReadNoticeNum() {
-      // const userID = JSON.parse(sessionStorage.getItem("userInfo")).id;
-      // getNoticeInfo(userID).then(res => {
-      //   console.log(res);
-      // }).catch(error => {
-      //   console.log(error);
-      //   this.$message.error("获取通知信息失败");
-      // });
+      const userID = JSON.parse(sessionStorage.getItem("userInfo")).id;
+      const userInfo = {"from": userID};
+      getNoticeInfo(userInfo).then(res => {
+        console.log(res);
+      }).catch(error => {
+        console.log(error);
+        this.$message.error("获取通知信息失败");
+      });
     }
   },
   mounted() {

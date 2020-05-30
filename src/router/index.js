@@ -167,7 +167,17 @@ export const asyncRoutes = [
         path: 'examInfo',
         name: 'examInfo',
         component: () => import('@/views/examManage/examInfo/index'),
-        meta: { title: '考试管理', icon: 'personManage', roles: ['16'] }
+        meta: { title: '考试管理', icon: 'examManage', roles: ['16'] }
+      },
+      {
+        path: 'createExam',
+        name: 'createExam',
+        hidden: true,
+        component: () => import('@/views/examManage/createExam/index'),
+        meta: { title: '考试组卷', icon: 'examManage', roles: ['16'] }
+      },
+      {
+        path: ''
       },
     ]
   },
