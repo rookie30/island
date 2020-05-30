@@ -82,11 +82,9 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 50px;
 }
 .createExam .examCard {
     width: 80%;
-    /* height: 280px; */
-    position: absolute;
-    top: 5%;
 }
 </style>
