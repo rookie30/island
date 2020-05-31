@@ -7,7 +7,7 @@
     <el-table v-loading="listLoading" :data="list" style="width: 100%">
       <el-table-column align="center" label="id">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="所属题库">
@@ -78,7 +78,7 @@ export default {
       listQuery: {
         currentPage: 1,
         type: 1,
-        library_id: 1,
+        library_id: '',
         status: 1,
         limit: 10
       },
@@ -112,7 +112,8 @@ export default {
         });
     },
     handleAdd() {
-      this.$router.push({path:'/paperManage/paperDetail?add=true'});
+      this.$router.push({path: "/paperManage/paperModel"});
+      // this.$router.push({path:'/paperManage/paperDetail?add=true'});
     },
     handleDelete(paper_id) {
       this.$confirm("此操作将永久删除该试卷, 是否继续?", "提示", {
@@ -125,7 +126,7 @@ export default {
           api
             .deletePaper(paper_id)
             .then(response => {
-              console.log(response);
+              // console.log(response);
               this.$message.success("删除成功");
               this.reload();
             })
@@ -142,10 +143,10 @@ export default {
       api
         .getPapers(this.listQuery)
         .then(response => {
+          console.log(response);
           this.list = response.data.rows;
           this.total = response.data.count;
           this.listLoading = false;
-          console.log(response);
         })
         .catch(err => {
           this.$message.error(err.message);
@@ -153,13 +154,14 @@ export default {
     }
   },
   mounted() {
+    this.listQuery.library_id = JSON.parse(sessionStorage.getItem("userInfo")).library_id;
     this.getList();
   }
 };
 </script>
 
 <style scoped>
-.paper-container {
-  padding: 40px;
+.paper-container .toolbar{
+  margin: 15px 10px;
 }
 </style>

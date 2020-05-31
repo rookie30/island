@@ -197,7 +197,14 @@ export const asyncRoutes = [
         component:()=>import('@/views/paperManage/paperDetail/index'),
         hidden:true,
         meta:{title:'试卷详情',roles:['16']}
-      }
+      },
+      {
+        path:'paperModel',
+        name:'paperModel',
+        component:()=>import('@/views/paperManage/paperModel/index'),
+        hidden:true,
+        meta:{title:'试卷模板',roles:['16']}
+      },
     ]
   },
 

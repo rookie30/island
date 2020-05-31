@@ -82,7 +82,7 @@ export default {
             examTime: '',
             isLoading: false,
             libraryInfo: {
-                library_id: 1,
+                library_id: '',
                 type: 2
             },
             rules: {
@@ -108,7 +108,6 @@ export default {
                             setTimeout(() => {
                                 this.$router.push("/examManage/examInfo");
                             }, 300);
-                            
                         }
                         else {
                             this.$message.error("创建失败");
@@ -141,8 +140,10 @@ export default {
         }
     },
     mounted() {
+        this.libraryInfo.library_id = JSON.parse(sessionStorage.getItem('userInfo')).library_id;
         api.getPaperInfo(this.libraryInfo).then(res => {
             this.paperList = res.data;
+            // console.log(res);
         }).catch(err => {
             console.log(err);
         });

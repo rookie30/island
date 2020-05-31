@@ -103,31 +103,13 @@ export default {
         .catch(error => {
           console.log(error);
           this.isLoading = false;
-          this.$message.error("获取考试信息失败");
+          // this.$message.error("获取考试信息失败");
         });
     },
-    /**
-     * 获取题库ID
-     */
-    getLibraryID() {
-      return new Promise((resolve, reject) => {
-        getChapterInfo()
-          .then(res => {
-            this.examStatus.library_id = res.data.rows[0].library_id;
-            resolve();
-          })
-          .catch(error => {
-            console.log(error);
-            this.$message.error("获取题库信息失败");
-            reject();
-          });
-      });
-    }
   },
   mounted() {
-    this.getLibraryID().then(() => {
-      this.getExamInformation();
-    });
+    this.examStatus.library_id = JSON.parse(sessionStorage.getItem("userInfo")).library_id;
+    this.getExamInformation();
   }
 };
 </script>
