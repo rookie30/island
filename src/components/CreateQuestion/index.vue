@@ -31,17 +31,22 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="题目内容" prop="content">
-                    <el-input 
+                    <!-- <el-input 
                         v-model="questionInfo.content" 
                         class="infoInput"
                         placeholder="请输入题目内容">
-                    </el-input>
+                    </el-input> -->
+                    <vue-editor v-model="questionInfo.content"></vue-editor>
                 </el-form-item>
-                <el-form-item label="答案" prop="answer">
+                <el-form-item label="答案" prop="answer" v-show="questionInfo.type!=3">
                     <el-input v-model="questionInfo.answer"
                         class="infoInput"
                         placeholder="请输入题目答案">
                     </el-input>
+                </el-form-item>
+                <el-form-item label="答案" prop="answer" v-show="questionInfo.type==3">
+                    <el-radio v-model="questionInfo.answer" label="1">正确</el-radio>
+                    <el-radio v-model="questionInfo.answer" label="2">错误</el-radio>
                 </el-form-item>
                 <el-form-item label="解析" prop="analysis">
                     <el-input 
@@ -95,9 +100,13 @@
 
 <script>
 import {createQuestionInfo} from '@/api/questionManage';
+import {VueEditor} from 'vue2-editor';
 
 export default {
     name: 'createQuestion',
+    components: {
+        VueEditor,
+    },
     data() {
         let checkNull = (rule, content, callback) => {
             if(!content) {

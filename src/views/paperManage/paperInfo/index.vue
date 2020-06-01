@@ -5,9 +5,9 @@
     </div>
 
     <el-table v-loading="listLoading" :data="list" style="width: 100%">
-      <el-table-column align="center" label="id">
+      <el-table-column align="center" label="试卷ID">
         <template slot-scope="scope">
-          <span>{{ scope.$index + 1 }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="所属题库">

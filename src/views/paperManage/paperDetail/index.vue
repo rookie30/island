@@ -29,8 +29,8 @@
             </el-form-item>
             <el-form-item label="试卷类型" prop="type">
               <el-radio-group v-model="paper_info.type">
-                <el-radio :label="1">正式</el-radio>
-                <el-radio :label="2">模拟</el-radio>
+                <el-radio :label="2">正式</el-radio>
+                <el-radio :label="1">模拟</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item>
@@ -293,7 +293,7 @@ export default {
                 this.paper_info.status += ""; // 将status字段转为string
                 this.paper_info.score = parseInt(this.paper_info.score); // 将score字段转为int
                 // console.log(this.paper_info);
-                
+
                 api.addPaper(this.paper_info).then(res => {
                   // console.log(res);
                   this.reload();

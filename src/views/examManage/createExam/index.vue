@@ -41,6 +41,12 @@
                         创建
                     </el-button>
                 </el-form-item>
+                <el-form-item>
+                    <div class="tip">
+                        <span>1.考试时长不得超过两个小时</span>
+                        <span>2.考试开始时间不得早于当前时间</span>
+                    </div>
+                </el-form-item>
             </el-form>
         </el-card>
     </div>
@@ -103,15 +109,10 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     api.createExam(this.examInfo).then(res => {
-                        if(res.code == 200) {
-                            this.$message.success("创建成功");
-                            setTimeout(() => {
-                                this.$router.push("/examManage/examInfo");
-                            }, 300);
-                        }
-                        else {
-                            this.$message.error("创建失败");
-                        }
+                        this.$message.success("创建成功");
+                        setTimeout(() => {
+                            this.$router.push("/examManage/examInfo");
+                        }, 300);
                     }).catch(err => {
                         console.log(err);
                         this.$message.error("创建失败");
@@ -143,7 +144,7 @@ export default {
         this.libraryInfo.library_id = JSON.parse(sessionStorage.getItem('userInfo')).library_id;
         api.getPaperInfo(this.libraryInfo).then(res => {
             this.paperList = res.data;
-            // console.log(res);
+            console.log(res);
         }).catch(err => {
             console.log(err);
         });
@@ -160,5 +161,12 @@ export default {
 }
 .createExam .examCard {
     width: 80%;
+}
+.createExam .tip {
+    color: gray;
+    font-size: 14px;
+}
+.createExam .tip::before {
+    content: "提示：";
 }
 </style>

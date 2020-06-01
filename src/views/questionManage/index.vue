@@ -48,7 +48,7 @@
                 label="答案" 
                 width="80">
                 <template slot-scope="scope">
-                        {{ scope.row.answer }}
+                        {{  scope.row.answer | answerFilter(listQuery.type) }}
                 </template>
             </el-table-column>
             <el-table-column
@@ -151,6 +151,19 @@ export default {
                 0: 'info'
             };
             return statusMap[status];
+        },
+        answerFilter(answer, type) {
+            if(type != 3) {
+                return answer;
+            }
+            else {
+                const answerMap = {
+                        1: '正确',
+                        2: '错误'
+                    };
+                return answerMap[answer];
+            }
+            
         },
     },
     data() {

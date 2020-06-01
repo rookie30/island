@@ -66,6 +66,9 @@ export default {
                     addPaperModel(this.paper_info).then(res => {
                         console.log(res);
                         this.$message.success("创建成功");
+                        setTimeout(() => {
+                            this.$router.push("/paperManage/paperInfo");
+                        },300);
                     }).catch(err => {
                         console.log(err);
                         this.$message.error("创建失败");
