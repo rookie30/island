@@ -24,7 +24,7 @@
             <el-form-item label="试卷状态" prop="status">
               <el-radio-group v-model="paper_info.status">
                 <el-radio :label="1">启动</el-radio>
-                <el-radio :label="2">禁用</el-radio>
+                <el-radio :label="0">禁用</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="试卷类型" prop="type">
@@ -200,12 +200,17 @@ export default {
     let checkScore = (rule, score, callback) => {
       if (!score) {
         callback(new Error("请输入试卷总分"));
-      } else {
+      }
+      else if(score <10 || score > 150) {
+        callback(new Error("试卷总分应在10-150分之内"));
+      } 
+      else {
         callback();
       }
     };
     let checkStatus = (rule, status, callback) => {
-      if(!status) {
+      console.log(status);
+      if(status == null) {
         return callback(new Error("情选择考试状态"));
       }
       callback();
@@ -256,6 +261,9 @@ export default {
       return typeMap[type];
     }
   },
+  inject: [
+    "reload"
+  ],
   methods: {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
@@ -266,9 +274,8 @@ export default {
             type: "warning"
           })
             .then(() => {
-              // this.$message.success('ok');
               if (!this.calculateScore()) {
-                this.$message.error("分数不合法");
+                this.$message.error("分数计算错误");
               } else {
                 // 编辑题目列表
                 let questionNumList = "";
@@ -281,21 +288,21 @@ export default {
                     questionNumList += this.problems[i].id;
                   }
                 }
-
                 this.paper_info.problem_list = questionNumList;
-
+                
+                this.paper_info.status += ""; // 将status字段转为string
+                this.paper_info.score = parseInt(this.paper_info.score); // 将score字段转为int
+                // console.log(this.paper_info);
+                
                 api.addPaper(this.paper_info).then(res => {
                   // console.log(res);
+                  this.reload();
                   this.$message.success("修改成功");
                 }).catch(err => {
                   console.log(err);
                   this.$message.error("修改失败");
                 });
               }
-            })
-            .catch(err => {
-              console.log(err);
-              this.$message.error("修改失败!");
             });
         }
         else {
@@ -324,11 +331,14 @@ export default {
           this.listLoading = false;
         });
     },
+    /**
+     * 获取试卷信息
+     */
     getDetail() {
       api
         .getPaperDetail(this.paper_id)
         .then(response => {
-          // console.log(response);
+          console.log(response);
           this.paper_info = response.data.info;
           this.problems = response.data.exercises;
         })
@@ -409,7 +419,6 @@ export default {
     this.questionInfo.id = JSON.parse(
       sessionStorage.getItem("userInfo")
     ).library_id;
-    // console.log(this.questionInfo.id);
     if (!this.$route.query.add) {
       this.paper_id = this.$route.query.paper_id;
       this.getDetail();

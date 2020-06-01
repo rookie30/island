@@ -50,7 +50,7 @@
             :type="scope.row.status===1?'danger':'primary'"
             size="small"
             :icon="scope.row.status===1?'el-icon-lock':'el-icon-unlock'"
-            @click="handleLock(scope.row.id)"
+            @click="handleLock(scope.row)"
           >{{scope.row.status===1?'禁用':'启动'}}</el-button>
         </template>
       </el-table-column>
@@ -77,9 +77,7 @@ export default {
     return {
       listQuery: {
         currentPage: 1,
-        type: 1,
         library_id: '',
-        status: 1,
         limit: 10
       },
       list: [],
@@ -88,32 +86,59 @@ export default {
     };
   },
   methods: {
-    handleLock(paper_id) {
-      this.$confirm("此操作将禁用该试卷, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          // api 请求
-          api
-            .banPaper(paper_id)
-            .then(response => {
-              console.log(response);
-              this.$message.success("禁用成功");
-              this.reload();
-            })
-            .catch(err => {
-              this.$message.error(err.message);
-            });
+    handleLock(paper_info) {
+      console.log(paper_info);
+      // 禁用
+      if(paper_info.status) {
+        this.$confirm("此操作将禁用该试卷, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(() => {
-          this.$message.info("已取消操作");
-        });
+          .then(() => {
+            // api 请求
+            api
+              .banPaper(paper_info.id)
+              .then(response => {
+                console.log(response);
+                this.$message.success("禁用成功");
+                this.reload();
+              })
+              .catch(err => {
+                this.$message.error(err.message);
+              });
+          })
+          .catch(() => {
+            this.$message.info("已取消操作");
+          });
+      }
+      else {
+        this.$confirm("此操作将启用该试卷, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            // api 请求
+            api
+              .activatePaper(paper_info.id)
+              .then(response => {
+                console.log(response);
+                this.$message.success("启用成功");
+                this.reload();
+              })
+              .catch(err => {
+                this.$message.error(err.message);
+              });
+          })
+          .catch(() => {
+            this.$message.info("已取消操作");
+          });
+      }
+      
     },
     handleAdd() {
       this.$router.push({path: "/paperManage/paperModel"});
-      // this.$router.push({path:'/paperManage/paperDetail?add=true'});
     },
     handleDelete(paper_id) {
       this.$confirm("此操作将永久删除该试卷, 是否继续?", "提示", {
