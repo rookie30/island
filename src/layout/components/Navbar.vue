@@ -7,7 +7,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container">
         <div class="avatar-wrapper">
-          <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589352807402&di=b6f28be999586377e548179492728d5b&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0ff41bd5ad6eddc4da68cd7b39dbb6fd536633a6.jpg" class="user-avatar">
+          <img :src="require('../../assets/avatar.jpg')" class="user-avatar">
           <i class="el- -caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
