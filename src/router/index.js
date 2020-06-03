@@ -176,6 +176,13 @@ export const asyncRoutes = [
         component: () => import('@/views/examManage/createExam/index'),
         meta: { title: '创建考试', icon: 'examManage', roles: ['16'] }
       },
+      {
+        path: 'checkPaper',
+        name: 'checkPaper',
+        hidden: true,
+        component: () => import('@/views/examManage/checkPaper/index'),
+        meta: { title: '批阅试卷', roles: ['16'] }
+      }
     ]
   },
 
@@ -192,16 +199,16 @@ export const asyncRoutes = [
         meta: { title: '试卷管理', icon: 'paper', roles: ['16'] },
       },
       {
-        path:'paperDetail',
-        name:'paperDetail',
+        path: 'paperDetail',
+        name: 'paperDetail',
         component:()=>import('@/views/paperManage/paperDetail/index'),
         hidden:true,
         meta:{title:'试卷详情',roles:['16']}
       },
       {
-        path:'paperModel',
-        name:'paperModel',
-        component:()=>import('@/views/paperManage/paperModel/index'),
+        path: 'paperModel',
+        name: 'paperModel',
+        component:()=> import('@/views/paperManage/paperModel/index'),
         hidden:true,
         meta:{title:'试卷模板',roles:['16']}
       },

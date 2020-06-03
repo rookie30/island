@@ -37,14 +37,22 @@
           {{ scope.row.end | parseTime }}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="操作" v-if="examStatus.status==2">
+        <template slot-scope="scope">
+          <el-button type="primary" @click="openTip(scope.row.id)">批卷</el-button>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         label="考试状态"
-        v-if="examStatus.status == ''"
+        v-if="examStatus.status === ''"
       >
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusTypeFilter">
+          <el-tag :type="scope.row.status | statusTypeFilter" v-if="scope.row.status==2" @click="openTip(scope.row.id)" class="statusTag">
             {{ scope.row.status | statusFilter }}
+          </el-tag>
+          <el-tag :type="scope.row.status | statusTypeFilter" v-else>
+              {{ scope.row.status | statusFilter }}
           </el-tag>
         </template>
       </el-table-column>
@@ -79,6 +87,9 @@ export default {
       return statusMap[status];
     }
   },
+  inject: [
+    "reload",
+  ],
   data() {
     return {
       examStatus: {
@@ -106,6 +117,24 @@ export default {
           // this.$message.error("获取考试信息失败");
         });
     },
+    openTip(examId) {
+      this.$alert("此操作将提交考试并自动批卷，是否继续", "提示", {
+        confirmButtonText: "确定",
+        type: 'warning'
+      }).then(() => {
+        api.checkPaper(examId).then(res => {
+          this.$message.success("提交成功");
+          setTimeout(() => {
+            this.reload();
+          }, 300);
+        }).catch(err => {
+          console.log(err);
+          this.$message.error("提交失败");
+        });
+      }).catch(() => {
+
+      });
+    }
   },
   mounted() {
     this.examStatus.library_id = JSON.parse(sessionStorage.getItem("userInfo")).library_id;
@@ -117,5 +146,8 @@ export default {
 <style scoped>
 .examInfo .header {
   margin: 15px 10px;
+}
+.statusTag:hover {
+  cursor: pointer;
 }
 </style>

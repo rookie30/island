@@ -31,3 +31,12 @@ export function createExam(data) {
         data
     })
 }
+
+/**
+ * 批卷
+ */
+export function checkPaper(data) {
+    return request({
+        url: `/v1/record/judge/${data}`,
+    })
+}
