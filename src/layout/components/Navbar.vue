@@ -16,7 +16,7 @@
               个人中心
             </el-dropdown-item>
           </router-link>
-          <router-link to="/noticeCenter">
+          <!-- <router-link to="/noticeCenter">
             <el-badge 
               :value="unReadNoticeNum" 
               class="item" 
@@ -26,7 +26,7 @@
                 通知中心
               </el-dropdown-item>
             </el-badge>
-          </router-link>
+          </router-link> -->
           <el-dropdown-item divided @click.native="openLogOutTip">
             <span style="display:block;color:red;">退出登录</span>
           </el-dropdown-item>

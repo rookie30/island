@@ -6,7 +6,7 @@
         <el-option value="" label="所有"> </el-option>
         <el-option :value="0" label="报名中"> </el-option>
         <el-option :value="1" label="进行中"> </el-option>
-        <el-option :value="2" label="批改中"> </el-option>
+        <el-option :value="2" label="待批阅"> </el-option>
         <el-option :value="3" label="已结束"> </el-option>
       </el-select>
 	  <router-link to="/examManage/createExam">
@@ -65,7 +65,7 @@ export default {
       const statusMap = {
         0: "报名中",
         1: "进行中",
-        2: "批改中",
+        2: "待批阅",
         3: "已结束"
       };
       return statusMap[status];
