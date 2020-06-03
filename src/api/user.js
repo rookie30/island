@@ -14,3 +14,11 @@ export function getInfo() {
     method: 'get'
   })
 }
+
+export function modifyInfo(data){
+  return request({
+    url:'/v1/user/modify',
+    method:'post',
+    data
+  })
+}

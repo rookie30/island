@@ -4,22 +4,28 @@
         <el-card class="personalInfoCard">
             <div slot="header">
                 <span>个人信息</span>
-                <el-button 
+                <!-- <el-button 
                 style="float: right; padding: 3px 0" 
                 type="text"
-                @click="changePwd">修改密码</el-button>
+                @click="changePwd">修改密码</el-button> -->
             </div>
             <el-form 
                 class="userInfo" 
                 :model="userInfo" 
                 label-width="80px"
                 >
-                <el-form-item 
+                <!-- <el-form-item 
                     label-width="0" 
-                    style="display:flex;justify-content:center;">
+                    style="display:flex;justify-content:center">
                     <el-avatar 
-                        src="userInfo.avatar"
-                        :size="90"></el-avatar>
+                        :src="require('../../assets/avatar.jpg')"
+                         :fit="none "
+                        :size="150"></el-avatar>
+                </el-form-item> -->
+                 <el-form-item>
+                    <div class="img-container">
+                        <img :src="require('../../assets/avatar.jpg')" alt="" srcset="" class="img-avatar">
+                    </div>
                 </el-form-item>
                 <el-form-item label="账号">
                     <el-input disabled v-model="userInfo.account"></el-input>
@@ -36,7 +42,7 @@
                 <el-form-item label="Email">
                     <el-input v-model="userInfo.email"></el-input>
                 </el-form-item>
-                <el-collapse-transition>
+                <!-- <el-collapse-transition>
                     <div>
                         <el-form-item
                         v-show="showChangePwd"
@@ -44,10 +50,9 @@
                         <el-input></el-input>
                         </el-form-item>
                     </div>
-                    
-                </el-collapse-transition>
+                </el-collapse-transition> -->
                 <el-form-item label-width="0">
-                    <el-button type="primary" class="saveChangeBtn">保存</el-button>
+                    <el-button type="primary" class="saveChangeBtn" @click="modify">保存</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -58,11 +63,14 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import {removeToken} from "@/utils/auth";
 
+import { modifyInfo } from "@/api/user";
+
 export default {
     name: "personalCenter",
     components: {
         Breadcrumb,
     },
+    inject:['reload'],
     data() {
         return {
             userInfo: {
@@ -81,6 +89,7 @@ export default {
          */
         getUserInfo() {
             this.$store.dispatch('user/getInfo').then(res => {
+                console.log(res);
                 this.userInfo = res;
             }).catch(error => {
                 console.log(error);
@@ -89,6 +98,24 @@ export default {
         },
         changePwd() {
             this.showChangePwd = !this.showChangePwd;
+        },
+        modify(){
+            
+            const data = {
+                id:this.userInfo.id,
+                sex:this.userInfo.sex,
+                email:this.userInfo.email
+            }
+
+            console.log(data);
+
+            modifyInfo(data).then(res=>{
+                this.$message.success('保存成功');
+                this.reload();
+            }).catch(err=>{
+                this.$message.error(err.message);
+            })
+
         }
     },
     mounted() {
@@ -123,4 +150,16 @@ export default {
 .personalCenter .personalInfoCard .el-card__header {
     text-align: center;
 }
+
+.img-container{
+    width: 100px;
+    margin: 0 auto;
+    overflow: hidden;
+    transform: translateX(-50%);
+}
+.img-avatar{
+    width: 100%;
+    border-radius: 30%;
+}
+
 </style>
