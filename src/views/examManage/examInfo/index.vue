@@ -22,26 +22,39 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
+
       <el-table-column align="center" label="考试名称">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
+
       <el-table-column align="center" label="开始时间">
         <template slot-scope="scope">
           {{ scope.row.start | parseTime }}
         </template>
       </el-table-column>
+
       <el-table-column align="center" label="结束时间">
         <template slot-scope="scope">
           {{ scope.row.end | parseTime }}
         </template>
       </el-table-column>
+
       <el-table-column align="center" label="操作" v-if="examStatus.status==2">
         <template slot-scope="scope">
           <el-button type="primary" @click="openTip(scope.row.id)">批卷</el-button>
         </template>
       </el-table-column>
+
+      <el-table-column align="center" label="操作" v-if="examStatus.status==3">
+        <template slot-scope="scope">
+          <router-link :to="{name: 'checkGrade', query: {examId: scope.row.id}}">
+            <el-button type="primary">查看成绩</el-button>
+          </router-link>
+        </template>
+      </el-table-column>
+
       <el-table-column
         align="center"
         label="考试状态"
@@ -50,6 +63,11 @@
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | statusTypeFilter" v-if="scope.row.status==2" @click="openTip(scope.row.id)" class="statusTag">
             {{ scope.row.status | statusFilter }}
+          </el-tag>
+          <el-tag :type="scope.row.status | statusTypeFilter" v-else-if="scope.row.status==3">
+              <router-link :to="{name: 'checkGrade', query: {examId: scope.row.id}}">
+                {{ scope.row.status | statusFilter }}
+              </router-link>
           </el-tag>
           <el-tag :type="scope.row.status | statusTypeFilter" v-else>
               {{ scope.row.status | statusFilter }}
@@ -132,9 +150,8 @@ export default {
           this.$message.error("提交失败");
         });
       }).catch(() => {
-
       });
-    }
+    },
   },
   mounted() {
     this.examStatus.library_id = JSON.parse(sessionStorage.getItem("userInfo")).library_id;

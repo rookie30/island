@@ -177,11 +177,11 @@ export const asyncRoutes = [
         meta: { title: '创建考试', icon: 'examManage', roles: ['16'] }
       },
       {
-        path: 'checkPaper',
-        name: 'checkPaper',
+        path: 'checkGrade',
+        name: 'checkGrade',
         hidden: true,
-        component: () => import('@/views/examManage/checkPaper/index'),
-        meta: { title: '批阅试卷', roles: ['16'] }
+        component: () => import('@/views/examManage/checkGrade/index'),
+        meta: { title: '查看成绩', roles: ['16'] }
       }
     ]
   },

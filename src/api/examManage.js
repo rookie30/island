@@ -38,5 +38,16 @@ export function createExam(data) {
 export function checkPaper(data) {
     return request({
         url: `/v1/record/judge/${data}`,
+        method: 'get'
+    })
+}
+
+/**
+ * 获取考试成绩信息
+ */
+export function getGradeInfo(examId) {
+    return request({
+        url: `/v1/userexam/grade/${examId}`,
+        method: 'get'
     })
 }

@@ -14,19 +14,20 @@
                 :model="userInfo" 
                 label-width="80px"
                 >
-                <!-- <el-form-item 
+                <el-form-item 
                     label-width="0" 
                     style="display:flex;justify-content:center">
                     <el-avatar 
                         :src="require('../../assets/avatar.jpg')"
-                         :fit="none "
-                        :size="150"></el-avatar>
-                </el-form-item> -->
-                 <el-form-item>
+                        fit="scale-down"
+                        :size="150">
+                    </el-avatar>
+                </el-form-item>
+                 <!-- <el-form-item>
                     <div class="img-container">
                         <img :src="require('../../assets/avatar.jpg')" alt="" srcset="" class="img-avatar">
                     </div>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="账号">
                     <el-input disabled v-model="userInfo.account"></el-input>
                 </el-form-item>
@@ -159,7 +160,6 @@ export default {
 }
 .img-avatar{
     width: 100%;
-    border-radius: 30%;
+    border-radius: 50%;
 }
-
 </style>
